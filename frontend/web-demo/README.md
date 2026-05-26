@@ -4,6 +4,12 @@ A single static page that mocks the planned Light v2 web UI. It contains
 **no functionality** — just a visual reference so we can iterate on the
 look and feel before building the real frontend.
 
+## Preview
+
+| Light | Dark (placeholder palette) |
+| --- | --- |
+| ![Light](./preview-light.png) | ![Dark](./preview-dark.png) |
+
 ## Run
 
 Just open the file in a browser:
