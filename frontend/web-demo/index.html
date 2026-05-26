@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OpenHarness — UI demo</title>
+<style>
+  /* ===========================================================
+     Theme tokens. All colors live here.
+     Light is the default. The [data-theme="dark"] block is the
+     reserved hook for a future dark theme — values are placeholders
+     so the rest of the UI does not need to change later.
+     =========================================================== */
+  :root,
+  [data-theme="light"] {
+    --bg:            #ffffff;
+    --bg-subtle:     #fafafa;
+    --bg-muted:      #f4f4f5;
+    --bg-hover:      #f0f0f1;
+    --border:        #e5e5e7;
+    --border-strong: #d4d4d8;
+    --fg:            #18181b;
+    --fg-muted:      #52525b;
+    --fg-subtle:     #a1a1aa;
+    --accent:        #1f1f23;
+    --accent-fg:     #ffffff;
+    --accent-subtle: #f4f4f5;
+    --ring:          rgba(24,24,27,.18);
+    --link:          #2563eb;
+    --success:       #15803d;
+    --warning:       #b45309;
+    --danger:        #b91c1c;
+    --code-bg:       #f7f7f8;
+    --diff-add-bg:   #e6ffec;
+    --diff-del-bg:   #ffebe9;
+    --shadow-sm:     0 1px 2px rgba(0,0,0,.04), 0 0 0 1px rgba(0,0,0,.02);
+
+    --radius-sm: 4px;
+    --radius:    6px;
+    --radius-lg: 8px;
+  }
+
+  /* Reserved for future dark theme. Currently mirrors light so
+     switching does nothing visible — intentional placeholder. */
+  [data-theme="dark"] {
+    --bg:            #0b0b0c;
+    --bg-subtle:     #111113;
+    --bg-muted:      #18181b;
+    --bg-hover:      #1f1f23;
+    --border:        #232327;
+    --border-strong: #2f2f33;
+    --fg:            #f4f4f5;
+    --fg-muted:      #a1a1aa;
+    --fg-subtle:     #71717a;
+    --accent:        #f4f4f5;
+    --accent-fg:     #111113;
+    --accent-subtle: #1f1f23;
+    --ring:          rgba(244,244,245,.2);
+    --link:          #60a5fa;
+    --success:       #4ade80;
+    --warning:       #fbbf24;
+    --danger:        #f87171;
+    --code-bg:       #141416;
+    --diff-add-bg:   #0f2a17;
+    --diff-del-bg:   #2a1212;
+    --shadow-sm:     0 1px 2px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.04);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--fg);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  code, pre, .mono { font-family: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; border-radius: var(--radius-sm); }
+
+  /* ---------- Layout shell ---------- */
+  .app { display: grid; grid-template-columns: 256px 1fr; height: 100vh; }
+  .sidebar {
+    background: var(--bg-subtle);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; min-width: 0;
+  }
+  .main { display: flex; flex-direction: column; min-width: 0; }
+
+  /* ---------- Sidebar ---------- */
+  .side-head {
+    height: 48px; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 12px; border-bottom: 1px solid var(--border);
+  }
+  .brand { display: flex; align-items: center; gap: 8px; }
+  .brand-mark {
+    width: 18px; height: 18px; border-radius: 4px;
+    border: 1px solid var(--border-strong);
+    background:
+      linear-gradient(135deg, transparent 49%, var(--fg) 49%, var(--fg) 51%, transparent 51%);
+  }
+  .brand-name { font-weight: 600; letter-spacing: -0.01em; }
+  .icon-btn {
+    width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;
+    border-radius: var(--radius-sm); color: var(--fg-muted);
+  }
+  .icon-btn:hover { background: var(--bg-hover); color: var(--fg); }
+
+  .side-section { padding: 12px 8px 4px; color: var(--fg-subtle); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+
+  .sessions { display: flex; flex-direction: column; gap: 1px; padding: 0 6px; overflow: auto; flex: 1; }
+  .session {
+    position: relative;
+    display: block; padding: 7px 10px 7px 12px;
+    border-radius: var(--radius);
+    color: var(--fg);
+    cursor: pointer;
+    border: 1px solid transparent;
+    min-width: 0;
+  }
+  .session:hover { background: var(--bg-hover); }
+  .session.active {
+    background: var(--accent-subtle);
+  }
+  .session.active::before {
+    content: ""; position: absolute; left: 4px; top: 8px; bottom: 8px; width: 2px;
+    background: var(--fg); border-radius: 2px;
+  }
+  .session .s-title {
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-size: 13px;
+  }
+  .session .s-meta { color: var(--fg-subtle); font-size: 11px; margin-top: 2px; }
+
+  .side-foot {
+    border-top: 1px solid var(--border);
+    padding: 10px 12px;
+    display: flex; align-items: center; gap: 8px;
+    color: var(--fg-muted); font-size: 12px;
+  }
+  .avatar {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--bg-muted); border: 1px solid var(--border);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px; color: var(--fg-muted);
+  }
+
+  /* ---------- Main: header ---------- */
+  .topbar {
+    height: 48px; display: flex; align-items: center; gap: 12px;
+    padding: 0 16px; border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .crumbs { display: flex; align-items: center; gap: 6px; min-width: 0; }
+  .crumb { color: var(--fg-muted); }
+  .crumb.current { color: var(--fg); font-weight: 500; }
+  .crumb-sep { color: var(--fg-subtle); }
+  .topbar .spacer { flex: 1; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 8px; border: 1px solid var(--border);
+    border-radius: 999px; font-size: 12px; color: var(--fg-muted);
+    background: var(--bg);
+  }
+  .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+
+  /* ---------- Conversation ---------- */
+  .conv {
+    flex: 1; overflow: auto;
+    padding: 32px 0 24px;
+  }
+  .conv-inner { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+  /* Welcome */
+  .welcome { padding: 12px 0 32px; }
+  .welcome h1 {
+    font-size: 18px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 4px;
+  }
+  .welcome p { margin: 0; color: var(--fg-muted); }
+  .welcome .cwd {
+    margin-top: 14px; display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 8px; border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--bg-subtle); color: var(--fg-muted); font-size: 12px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+  .chip {
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 4px 10px; font-size: 12px; color: var(--fg-muted);
+    background: var(--bg);
+  }
+  .chip:hover { background: var(--bg-hover); color: var(--fg); }
+
+  /* Messages */
+  .msg { padding: 18px 0; border-top: 1px solid var(--border); }
+  .msg:first-of-type { border-top: 1px solid var(--border); }
+  .msg-head {
+    display: flex; align-items: center; gap: 8px;
+    color: var(--fg-muted); font-size: 12px; margin-bottom: 6px;
+  }
+  .msg-head .who { color: var(--fg); font-weight: 500; }
+  .msg-head .role-ico {
+    width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border-strong); border-radius: 3px; color: var(--fg-muted);
+  }
+  .msg-body { color: var(--fg); }
+  .msg-body p { margin: 0 0 8px; }
+  .msg-body p:last-child { margin-bottom: 0; }
+  .msg-body code {
+    background: var(--code-bg); border: 1px solid var(--border);
+    padding: 0 4px; border-radius: var(--radius-sm); font-size: 12.5px;
+  }
+  .msg-body pre {
+    background: var(--code-bg); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 10px 12px; overflow: auto;
+    font-size: 12.5px; margin: 8px 0;
+  }
+  .msg.user .msg-body {
+    /* User content is plain, no bubble — only a subtle left rule for scannability. */
+    border-left: 2px solid var(--border-strong);
+    padding-left: 12px;
+    color: var(--fg);
+  }
+  .cursor {
+    display: inline-block; width: 1px; height: 1em; background: var(--fg);
+    vertical-align: -2px; margin-left: 1px;
+    animation: blink 1s steps(2, start) infinite;
+  }
+  @keyframes blink { to { visibility: hidden; } }
+
+  /* Tool-call card */
+  .tool {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin: 10px 0;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .tool-head {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px;
+    font-size: 12.5px;
+    background: var(--bg-subtle);
+    border-bottom: 1px solid var(--border);
+  }
+  .tool-name { font-family: ui-monospace, "JetBrains Mono", Menlo, monospace; font-weight: 500; }
+  .tool-args { color: var(--fg-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
+  .tool-status {
+    font-size: 11px; padding: 1px 6px; border-radius: 999px;
+    border: 1px solid var(--border); color: var(--fg-muted); background: var(--bg);
+  }
+  .tool-status.ok { color: var(--success); border-color: #bbf7d0; background: #f0fdf4; }
+  .tool-status.run { color: var(--fg-muted); }
+  .tool-body {
+    font-family: ui-monospace, "JetBrains Mono", Menlo, monospace;
+    font-size: 12px; color: var(--fg-muted);
+    padding: 8px 10px; white-space: pre;
+    background: var(--bg);
+  }
+
+  /* Diff */
+  .diff {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: hidden; margin: 10px 0;
+    font-family: ui-monospace, Menlo, monospace; font-size: 12.5px;
+  }
+  .diff-head {
+    background: var(--bg-subtle); border-bottom: 1px solid var(--border);
+    padding: 6px 10px; color: var(--fg-muted); display: flex; gap: 10px;
+  }
+  .diff-row { display: flex; }
+  .diff-row .ln {
+    width: 36px; flex: 0 0 36px; text-align: right; padding: 0 8px;
+    color: var(--fg-subtle); user-select: none;
+    border-right: 1px solid var(--border); background: var(--bg-subtle);
+  }
+  .diff-row .code { padding: 0 8px; white-space: pre; flex: 1; }
+  .diff-row.add { background: var(--diff-add-bg); }
+  .diff-row.del { background: var(--diff-del-bg); }
+
+  /* Inline permission bar */
+  .perm {
+    margin: 12px 0; padding: 10px 12px;
+    border: 1px solid var(--border-strong); border-radius: var(--radius);
+    background: var(--bg-subtle);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .perm .perm-text { flex: 1; color: var(--fg); }
+  .perm .perm-text small { display: block; color: var(--fg-muted); font-size: 12px; margin-top: 2px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 10px; border-radius: var(--radius);
+    border: 1px solid var(--border-strong); background: var(--bg); color: var(--fg);
+    font-size: 13px;
+  }
+  .btn:hover { background: var(--bg-hover); }
+  .btn.ghost { border-color: transparent; color: var(--fg-muted); }
+  .btn.ghost:hover { background: var(--bg-hover); color: var(--fg); }
+  .btn.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+  .btn.primary:hover { background: #000; }
+  .btn.danger { color: var(--danger); }
+
+  /* ---------- Composer ---------- */
+  .composer-wrap {
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+    padding: 12px 24px 14px;
+  }
+  .composer {
+    max-width: 760px; margin: 0 auto;
+    border: 1px solid var(--border-strong); border-radius: var(--radius-lg);
+    background: var(--bg);
+    transition: border-color .12s ease-out, box-shadow .12s ease-out;
+  }
+  .composer:focus-within {
+    border-color: var(--fg);
+    box-shadow: 0 0 0 3px var(--ring);
+  }
+  .composer textarea {
+    width: 100%; border: 0; outline: 0; resize: none;
+    padding: 10px 12px 4px; background: transparent; color: var(--fg);
+    font: inherit; min-height: 44px; max-height: 240px;
+  }
+  .composer-bar {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 6px 6px 10px;
+  }
+  .composer-bar .spacer { flex: 1; }
+  .hint {
+    color: var(--fg-subtle); font-size: 11.5px;
+  }
+  .kbd {
+    display: inline-block; border: 1px solid var(--border);
+    border-bottom-width: 2px; border-radius: 4px;
+    padding: 0 4px; font-family: ui-monospace, Menlo, monospace; font-size: 11px;
+    color: var(--fg-muted); background: var(--bg-subtle);
+  }
+
+  /* Slash-command popover */
+  .popover {
+    position: relative; max-width: 760px; margin: 6px auto 0;
+  }
+  .popover-panel {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--bg); box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .popover-item {
+    display: grid; grid-template-columns: 160px 1fr auto;
+    align-items: center; gap: 12px;
+    padding: 7px 10px; cursor: pointer;
+    border-bottom: 1px solid var(--border);
+  }
+  .popover-item:last-child { border-bottom: 0; }
+  .popover-item.active { background: var(--bg-hover); }
+  .popover-item .cmd { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; color: var(--fg); }
+  .popover-item .desc { color: var(--fg-muted); font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .popover-item .hint { font-size: 11px; }
+
+  /* ---------- Status bar ---------- */
+  .statusbar {
+    height: 28px; border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 14px;
+    padding: 0 14px;
+    font-family: ui-monospace, Menlo, monospace; font-size: 11.5px;
+    color: var(--fg-muted); background: var(--bg-subtle);
+  }
+  .statusbar .sep { color: var(--fg-subtle); }
+  .statusbar .right { margin-left: auto; display: flex; gap: 14px; }
+
+  /* Theme switcher */
+  .theme-switch {
+    display: inline-flex; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+  }
+  .theme-switch button {
+    padding: 3px 8px; font-size: 12px; color: var(--fg-muted);
+    border-right: 1px solid var(--border); background: var(--bg);
+  }
+  .theme-switch button:last-child { border-right: 0; }
+  .theme-switch button.active { background: var(--bg-muted); color: var(--fg); }
+  .theme-switch button:disabled { color: var(--fg-subtle); cursor: not-allowed; }
+
+  /* Inline SVG icons inherit currentColor */
+  svg.ico { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  svg.ico-16 { width: 16px; height: 16px; }
+</style>
+</head>
+<body>
+  <!-- Reusable icon defs (Lucide-style line icons) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+      <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+      <symbol id="i-bot" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M9 12h.01M15 12h.01M12 3v4M8 19v2M16 19v2"/></symbol>
+      <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21a8 8 0 1 0-16 0"/><circle cx="12" cy="7" r="4"/></symbol>
+      <symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></symbol>
+      <symbol id="i-paperclip" viewBox="0 0 24 24"><path d="M21 12.5 12.5 21a5 5 0 0 1-7-7l9-9a3.5 3.5 0 1 1 5 5l-9 9a2 2 0 1 1-3-3l8-8"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+      <symbol id="i-terminal" viewBox="0 0 24 24"><path d="m4 17 6-6-6-6"/><path d="M12 19h8"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+      <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    </defs>
+  </svg>
+
+  <div class="app">
+    <!-- ============== Sidebar ============== -->
+    <aside class="sidebar">
+      <div class="side-head">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">OpenHarness</span>
+        </div>
+        <button class="icon-btn" title="New session"><svg class="ico"><use href="#i-plus"/></svg></button>
+      </div>
+
+      <div class="side-section">Today</div>
+      <nav class="sessions" aria-label="Sessions">
+        <a class="session active">
+          <div class="s-title">Refactor query engine routing</div>
+          <div class="s-meta">12 messages · 14:02</div>
+        </a>
+        <a class="session">
+          <div class="s-title">Investigate flaky test in tests/test_skills</div>
+          <div class="s-meta">8 messages · 11:37</div>
+        </a>
+        <a class="session">
+          <div class="s-title">Bump pydantic and fix deprecations</div>
+          <div class="s-meta">5 messages · 09:18</div>
+        </a>
+
+        <div class="side-section">Earlier</div>
+        <a class="session">
+          <div class="s-title">Wire skills loader to CLI</div>
+          <div class="s-meta">Yesterday</div>
+        </a>
+        <a class="session">
+          <div class="s-title">Draft release notes for v0.1.9</div>
+          <div class="s-meta">May 22</div>
+        </a>
+        <a class="session">
+          <div class="s-title">Permission prompt UX review</div>
+          <div class="s-meta">May 20</div>
+        </a>
+      </nav>
+
+      <div class="side-foot">
+        <span class="avatar">hh</span>
+        <span style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">hanhsia</span>
+        <button class="icon-btn" title="Settings"><svg class="ico"><use href="#i-settings"/></svg></button>
+      </div>
+    </aside>
+
+    <!-- ============== Main ============== -->
+    <main class="main">
+      <header class="topbar">
+        <div class="crumbs">
+          <svg class="ico ico-16" style="color:var(--fg-muted)"><use href="#i-folder"/></svg>
+          <span class="crumb">OpenHarness</span>
+          <span class="crumb-sep">/</span>
+          <span class="crumb current">Refactor query engine routing</span>
+        </div>
+        <div class="spacer"></div>
+
+        <div class="theme-switch" role="tablist" aria-label="Theme">
+          <button class="active" data-set-theme="light">Light</button>
+          <button data-set-theme="dark" title="Dark theme — placeholder, wired but not styled yet">Dark</button>
+          <button data-set-theme="system" disabled title="Coming soon">System</button>
+        </div>
+        <span class="pill"><span class="dot"></span> connected</span>
+      </header>
+
+      <!-- Conversation -->
+      <section class="conv">
+        <div class="conv-inner">
+
+          <!-- Welcome (collapsed once a conversation starts; shown here as a header) -->
+          <div class="welcome">
+            <h1>Ask anything about this repo.</h1>
+            <p>OpenHarness runs your prompts against the local codebase with skills and tools you control.</p>
+            <span class="cwd mono">~/work/OpenHarness</span>
+            <div class="chips" aria-label="Examples">
+              <button class="chip">Summarize the query engine</button>
+              <button class="chip">Where is the skills loader wired?</button>
+              <button class="chip">Run the test suite</button>
+              <button class="chip">Open CHANGELOG.md</button>
+            </div>
+          </div>
+
+          <!-- User msg -->
+          <article class="msg user">
+            <div class="msg-head">
+              <span class="role-ico"><svg class="ico"><use href="#i-user"/></svg></span>
+              <span class="who">You</span>
+              <span>· 14:02</span>
+            </div>
+            <div class="msg-body">
+              <p>Trace how a slash command flows through the query engine, and show me where permission checks happen. Then propose a small refactor to centralize the dispatch.</p>
+            </div>
+          </article>
+
+          <!-- Assistant msg with tool calls -->
+          <article class="msg assistant">
+            <div class="msg-head">
+              <span class="role-ico"><svg class="ico"><use href="#i-bot"/></svg></span>
+              <span class="who">OpenHarness</span>
+              <span>· claude-sonnet-4.5</span>
+              <span>· 14:02</span>
+            </div>
+            <div class="msg-body">
+              <p>I’ll start by locating the entry point for slash commands, then follow the call into the query engine.</p>
+
+              <div class="tool">
+                <div class="tool-head">
+                  <svg class="ico" style="color:var(--fg-muted)"><use href="#i-search"/></svg>
+                  <span class="tool-name">grep</span>
+                  <span class="tool-args">pattern="^/", path="src/openharness", type="py"</span>
+                  <span class="tool-status ok"><svg class="ico" style="vertical-align:-2px"><use href="#i-check"/></svg> 7 matches</span>
+                </div>
+                <div class="tool-body">src/openharness/cli/commands.py:42
+src/openharness/engine/dispatch.py:118
+src/openharness/engine/dispatch.py:201
+src/openharness/skills/loader.py:88</div>
+              </div>
+
+              <div class="tool">
+                <div class="tool-head">
+                  <svg class="ico" style="color:var(--fg-muted)"><use href="#i-terminal"/></svg>
+                  <span class="tool-name">view</span>
+                  <span class="tool-args">path="src/openharness/engine/dispatch.py", range=[110, 160]</span>
+                  <span class="tool-status ok">read 50 lines</span>
+                </div>
+              </div>
+
+              <p>Slash commands enter at <code>cli/commands.py</code>, are parsed into a <code>Command</code> object, then dispatched by <code>QueryEngine.dispatch</code>. Permission checks happen <em>after</em> tool resolution but <em>before</em> execution, inside <code>_authorize_tool</code>.</p>
+              <p>Here’s a minimal refactor that pulls the dispatch table out of the engine so it can be unit-tested in isolation:</p>
+
+              <div class="diff" role="figure" aria-label="Diff preview">
+                <div class="diff-head">
+                  <span class="mono">src/openharness/engine/dispatch.py</span>
+                  <span style="color:var(--fg-subtle)">+12 −7</span>
+                </div>
+                <div class="diff-row"><span class="ln">118</span><span class="code">  def dispatch(self, cmd: Command) -> Result:</span></div>
+                <div class="diff-row del"><span class="ln">119</span><span class="code">-     handler = self._handlers.get(cmd.name)</span></div>
+                <div class="diff-row del"><span class="ln">120</span><span class="code">-     if handler is None:</span></div>
+                <div class="diff-row del"><span class="ln">121</span><span class="code">-         raise UnknownCommand(cmd.name)</span></div>
+                <div class="diff-row add"><span class="ln">119</span><span class="code">+     handler = self.registry.resolve(cmd.name)</span></div>
+                <div class="diff-row add"><span class="ln">120</span><span class="code">+     self._authorize_tool(handler, cmd)</span></div>
+                <div class="diff-row"><span class="ln">122</span><span class="code">      return handler(cmd, ctx=self.ctx)</span></div>
+              </div>
+
+              <p>Want me to apply this and run the test suite?<span class="cursor" aria-hidden="true"></span></p>
+
+              <!-- Inline permission bar -->
+              <div class="perm" role="dialog" aria-label="Permission request">
+                <div class="perm-text">
+                  Allow <span class="mono">edit</span> on <span class="mono">src/openharness/engine/dispatch.py</span>?
+                  <small>This will modify a file in your working tree.</small>
+                </div>
+                <button class="btn ghost danger">Deny</button>
+                <button class="btn">Allow once</button>
+                <button class="btn primary">Allow always for this session</button>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- Composer + slash popover -->
+      <div class="composer-wrap">
+        <div class="popover" aria-hidden="false">
+          <div class="popover-panel" role="listbox" aria-label="Slash commands">
+            <div class="popover-item active" role="option" aria-selected="true">
+              <span class="cmd">/edit</span>
+              <span class="desc">Apply changes to a file in the working tree</span>
+              <span class="hint"><span class="kbd">↵</span></span>
+            </div>
+            <div class="popover-item" role="option">
+              <span class="cmd">/run</span>
+              <span class="desc">Run a shell command (requires permission)</span>
+              <span class="hint"></span>
+            </div>
+            <div class="popover-item" role="option">
+              <span class="cmd">/test</span>
+              <span class="desc">Run the project test suite</span>
+              <span class="hint"></span>
+            </div>
+            <div class="popover-item" role="option">
+              <span class="cmd">/skill</span>
+              <span class="desc">Invoke a skill from .openharness/skills</span>
+              <span class="hint"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="composer">
+          <textarea placeholder="Reply to OpenHarness…   Type / for commands">/e</textarea>
+          <div class="composer-bar">
+            <button class="icon-btn" title="Attach file"><svg class="ico"><use href="#i-paperclip"/></svg></button>
+            <span class="hint">
+              <span class="kbd">↵</span> send · <span class="kbd">⇧↵</span> newline · <span class="kbd">/</span> commands
+            </span>
+            <span class="spacer"></span>
+            <button class="btn primary"><svg class="ico" style="color:currentColor"><use href="#i-send"/></svg> Send</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status bar -->
+      <footer class="statusbar">
+        <span>claude-sonnet-4.5</span>
+        <span class="sep">·</span>
+        <span>12,840 tok</span>
+        <span class="sep">·</span>
+        <span>$0.041</span>
+        <span class="right">
+          <span>main</span>
+          <span class="sep">·</span>
+          <span>~/work/OpenHarness</span>
+        </span>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // Tiny theme switcher — proves the data-theme hook works.
+    // Dark values are placeholders; the surface stays usable but is not the design target yet.
+    const root = document.documentElement;
+    const saved = localStorage.getItem('oh.theme');
+    if (saved) root.setAttribute('data-theme', saved);
+    document.querySelectorAll('[data-set-theme]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const t = btn.getAttribute('data-set-theme');
+        if (t === 'system') return;
+        root.setAttribute('data-theme', t);
+        localStorage.setItem('oh.theme', t);
+        document.querySelectorAll('[data-set-theme]').forEach(b => b.classList.toggle('active', b === btn));
+      });
+    });
+  </script>
+</body>
+</html>
