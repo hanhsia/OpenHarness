@@ -26,12 +26,12 @@ you and the harness, recorded in order, with nothing hidden.
 
 Choices that make the surface its own thing, not the default:
 
-- **Warm stone paper, slate ink.** The page now sits on a muted stone
-  `--paper` with slate-charcoal text instead of the previous celadon /
-  oxblood pairing. The accent is a restrained **mineral blue**, used
-  sparingly for the wordmark separator, section numbers, the `❯`
-  composer sigil, and permission asks, so the surface feels calmer
-  without collapsing into a generic grey shell.
+- **Soft neutral paper, slate ink.** The page now sits on a lighter,
+  less tinted `--paper` with slate-charcoal text so the background stays
+  quieter than the previous warm stone version. The accent remains a
+  restrained **mineral blue**, used sparingly for the wordmark
+  separator, section numbers, the `❯` composer sigil, and permission
+  asks.
 - **Three typefaces, three jobs.** Serif (Iowan Old Style / Charter)
   carries the prose voice. A clean sans (Segoe UI / system-ui) is
   reserved for chrome (header, buttons, hints). Mono (JetBrains Mono
