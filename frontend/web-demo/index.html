@@ -9,10 +9,8 @@
      OpenHarness — "field log" surface.
 
      Identity choices (deliberately not the AI-tool default):
-       • Celadon paper (青瓷), not cream and not neutral grey.
-         Cream / beige is the current AI-tool cliché — we avoid it.
-       • Deep ink for body, a single oxblood accent — used sparingly.
-         (青瓷 + 朱砂 is a classic Chinese ceramic pairing.)
+       • Warm stone paper, not harsh white and not generic grey.
+       • Slate-charcoal body text with a muted mineral blue accent.
        • Serif for prose voice, sans for UI chrome, mono for structure.
        • Every font stack has CJK fallbacks so 中文 / 日本語 / 한글 render
          in matching weight without dropping to a generic sans.
@@ -24,21 +22,21 @@
 
   :root,
   [data-theme="paper"] {
-    --paper:        #e6ece6;          /* pale celadon — cool, not beige */
-    --paper-edge:   #dce4dc;          /* slightly darker edge tone */
-    --paper-sunk:   #d3ddd3;          /* sunken / hover */
-    --rule:         #b8c4b8;          /* hairline on paper */
-    --rule-soft:    rgba(20, 36, 28, 0.10);
-    --ink:          #14201b;          /* body — ink-black with a green undertone */
-    --ink-soft:     #4a5852;          /* secondary text */
-    --ink-faint:    #7c8a83;          /* tertiary, marginalia */
-    --accent:       #7a1f1a;          /* deep oxblood — the one bright thing */
-    --accent-soft:  #b15a52;
-    --accent-wash:  rgba(122, 31, 26, 0.08);
-    --gold:         #a87422;          /* warning / annotation, used once or twice */
-    --add:          #2e5a2a;          /* diff additions, ink-tinted green */
-    --del:          #7a2a23;          /* diff removals, same family as accent */
-    --code-paper:   #dde6dd;
+    --paper:        #f2ede4;          /* warm stone paper */
+    --paper-edge:   #e8dfd1;          /* slightly darker edge tone */
+    --paper-sunk:   #ddd2c2;          /* sunken / hover */
+    --rule:         #c1b3a2;          /* hairline on paper */
+    --rule-soft:    rgba(33, 35, 42, 0.10);
+    --ink:          #21232a;          /* body — charcoal with a slate cast */
+    --ink-soft:     #5c6270;          /* secondary text */
+    --ink-faint:    #868c99;          /* tertiary, marginalia */
+    --accent:       #355c7d;          /* muted mineral blue */
+    --accent-soft:  #6282a0;
+    --accent-wash:  rgba(53, 92, 125, 0.10);
+    --gold:         #a27a3d;          /* warning / annotation, used once or twice */
+    --add:          #2f6a4d;          /* diff additions */
+    --del:          #8a4b44;          /* diff removals */
+    --code-paper:   #e9e2d7;
     /* Font stacks — Latin first, then CJK fallbacks so 中文 / 日本語 / 한글
        render in the matching weight instead of dropping to a generic sans. */
     --font-serif: "Iowan Old Style", "Charter", "Source Serif Pro", "Source Serif 4",
@@ -58,21 +56,21 @@
   /* Dark counterpart: "midnight ink ledger". Same identity,
      not a generic dashboard dark mode. */
   [data-theme="ink"] {
-    --paper:        #131814;          /* near-black with a faint green undertone */
-    --paper-edge:   #181e1a;
-    --paper-sunk:   #1e2520;
-    --rule:         #2a322c;
-    --rule-soft:    rgba(220, 232, 222, 0.08);
-    --ink:          #e3ebde;
-    --ink-soft:     #aab3a6;
-    --ink-faint:    #79827a;
-    --accent:       #d97a6c;          /* warmed oxblood for legibility on dark */
-    --accent-soft:  #b15a52;
-    --accent-wash:  rgba(217, 122, 108, 0.10);
-    --gold:         #d6a256;
-    --add:          #7fb27a;
-    --del:          #d97a6c;
-    --code-paper:   #1a1f1c;
+    --paper:        #16181d;          /* deep slate, not pure black */
+    --paper-edge:   #1d2026;
+    --paper-sunk:   #252a31;
+    --rule:         #343a44;
+    --rule-soft:    rgba(232, 236, 244, 0.08);
+    --ink:          #e7ebf2;
+    --ink-soft:     #b1b8c5;
+    --ink-faint:    #868d9a;
+    --accent:       #8db5d8;          /* softened blue for dark mode contrast */
+    --accent-soft:  #6d93b3;
+    --accent-wash:  rgba(141, 181, 216, 0.12);
+    --gold:         #d0aa6f;
+    --add:          #7cb98d;
+    --del:          #d0938b;
+    --code-paper:   #1c2026;
   }
 
   /* ---------- Base ---------- */

@@ -32,13 +32,12 @@ you and the harness, recorded in order, with nothing hidden.
 
 Choices that make the surface its own thing, not the default:
 
-- **Celadon paper, deep ink.** A cool celadon (青瓷) `--paper` with a
-  green-tinted ink — not the cream / beige that AI tools have made the
-  current cliché, and not the industry-standard cool white + neutral
-  grey either. A single **oxblood** accent (青瓷 + 朱砂, a classic
-  Chinese ceramic pairing) is the only saturated color on the page,
-  and it appears sparingly (wordmark separator, section numbers, the
-  `❯` composer sigil, permission asks).
+- **Warm stone paper, slate ink.** The page now sits on a muted stone
+  `--paper` with slate-charcoal text instead of the previous celadon /
+  oxblood pairing. The accent is a restrained **mineral blue**, used
+  sparingly for the wordmark separator, section numbers, the `❯`
+  composer sigil, and permission asks, so the surface feels calmer
+  without collapsing into a generic grey shell.
 - **Three typefaces, three jobs.** Serif (Iowan Old Style / Charter)
   carries the prose voice. A clean sans (Segoe UI / system-ui) is
   reserved for chrome (header, buttons, hints). Mono (JetBrains Mono
