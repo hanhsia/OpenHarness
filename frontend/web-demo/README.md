@@ -32,16 +32,22 @@ you and the harness, recorded in order, with nothing hidden.
 
 Choices that make the surface its own thing, not the default:
 
-- **Warm paper, deep ink.** A cream `--paper` with deep-brown ink, not the
-  industry-standard cool white + neutral grey. A single **oxblood** accent
-  is the only saturated color on the page, and it appears sparingly
-  (wordmark separator, section numbers, the `❯` composer sigil,
-  permission asks).
+- **Celadon paper, deep ink.** A cool celadon (青瓷) `--paper` with a
+  green-tinted ink — not the cream / beige that AI tools have made the
+  current cliché, and not the industry-standard cool white + neutral
+  grey either. A single **oxblood** accent (青瓷 + 朱砂, a classic
+  Chinese ceramic pairing) is the only saturated color on the page,
+  and it appears sparingly (wordmark separator, section numbers, the
+  `❯` composer sigil, permission asks).
 - **Three typefaces, three jobs.** Serif (Iowan Old Style / Charter)
-  carries the prose voice. A clean sans is reserved for chrome (header,
-  buttons, hints). Mono is reserved for structural data (paths, tool
+  carries the prose voice. A clean sans (Segoe UI / system-ui) is
+  reserved for chrome (header, buttons, hints). Mono (JetBrains Mono
+  / Cascadia Code) is reserved for structural data (paths, tool
   names, diffs). Most AI tools use a single sans for everything; the
-  contrast here is part of the identity.
+  contrast here is part of the identity. **Every stack carries CJK
+  fallbacks** (PingFang SC / Microsoft YaHei / Source Han / Noto CJK
+  / Sarasa Mono) so 中文 / 日本語 / 한글 render in the matching weight
+  instead of dropping to a generic sans.
 - **No sidebar.** The chat-list-on-the-left pattern is the strongest
   cliché in this product category, so it is gone. The current session is
   named in the masthead; switching sessions is a dropdown affordance,
