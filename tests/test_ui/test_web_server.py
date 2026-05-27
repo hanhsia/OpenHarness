@@ -22,10 +22,10 @@ def test_browser_host_uses_loopback_for_wildcard_binds() -> None:
     assert _browser_host("::") == "127.0.0.1"
 
 
-def test_backend_command_uses_existing_backend_host_flags() -> None:
+def test_backend_command_uses_existing_backend_host_flags(tmp_path) -> None:
     command = _backend_command(
         WebFrontendConfig(
-            cwd="/tmp/demo",
+            cwd=str(tmp_path),
             model="sonnet",
             max_turns=8,
             effort="high",
@@ -35,7 +35,7 @@ def test_backend_command_uses_existing_backend_host_flags() -> None:
 
     assert command[:3] == [command[0], "-m", "openharness"]
     assert "--backend-only" in command
-    assert ["--cwd", "/tmp/demo"] == command[command.index("--cwd") : command.index("--cwd") + 2]
+    assert ["--cwd", str(tmp_path)] == command[command.index("--cwd") : command.index("--cwd") + 2]
     assert ["--model", "sonnet"] == command[command.index("--model") : command.index("--model") + 2]
     assert "--permission-mode" in command
 

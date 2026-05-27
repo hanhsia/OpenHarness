@@ -43,6 +43,20 @@ log = logging.getLogger(__name__)
 log = logging.getLogger(__name__)
 
 _PROTOCOL_PREFIX = "OHJSON:"
+SELECTOR_COMMANDS = {
+    "effort",
+    "fast",
+    "model",
+    "output-style",
+    "passes",
+    "permissions",
+    "provider",
+    "resume",
+    "theme",
+    "turns",
+    "vim",
+    "voice",
+}
 
 
 @dataclass(frozen=True)
@@ -120,6 +134,7 @@ class ReactBackendHost:
                 self._bundle.app_state.get(),
                 get_task_manager().list_tasks(),
                 [f"/{command.name}" for command in self._bundle.commands.list_commands()],
+                selector_commands=[f"/{name}" for name in sorted(SELECTOR_COMMANDS)],
             )
         )
         await self._emit(self._status_snapshot())

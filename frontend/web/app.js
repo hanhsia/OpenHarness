@@ -20,8 +20,7 @@ let entryCount = 0;
 let firstUser = true;
 let busy = false;
 let pendingSelect = null;
-
-const SELECTOR_COMMANDS = new Set(['provider', 'resume', 'permissions', 'theme', 'output-style', 'effort', 'passes', 'turns', 'fast', 'vim', 'voice', 'model']);
+let selectorCommands = new Set();
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"]/g, (ch) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[ch]));
@@ -131,8 +130,10 @@ function setStatus(state = {}) {
   document.querySelector('#permissionLabel').textContent = state.permission_mode ?? 'permissions';
 }
 
-function setCommands(commands = []) {
+function setCommands(commands = [], selectors = []) {
+  selectorCommands = new Set(selectors.map((command) => command.replace(/^\//, '')));
   commandList.innerHTML = '';
+  // Keep the sidebar compact; the full command registry is still available by typing "/" in the composer.
   commands.slice(0, 28).forEach((command) => {
     const button = document.createElement('button');
     button.type = 'button';
@@ -140,7 +141,7 @@ function setCommands(commands = []) {
     button.textContent = command;
     button.addEventListener('click', () => {
       const name = command.replace(/^\//, '');
-      if (SELECTOR_COMMANDS.has(name)) {
+      if (selectorCommands.has(name)) {
         send({type: 'select_command', command});
       } else {
         prompt.value = `${command} `;
@@ -220,7 +221,7 @@ function handleEvent(event) {
   if (event.type === 'ready') {
     setConnection('ready', 'ready');
     setStatus(event.state ?? {});
-    setCommands(event.commands ?? []);
+    setCommands(event.commands ?? [], event.selector_commands ?? []);
     return;
   }
   if (event.type === 'state_snapshot') {

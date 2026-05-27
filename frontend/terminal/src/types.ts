@@ -79,6 +79,7 @@ export type BackendEvent = {
 	mcp_servers?: McpServerSnapshot[] | null;
 	bridge_sessions?: BridgeSessionSnapshot[] | null;
 	commands?: string[] | null;
+	selector_commands?: string[] | null;
 	modal?: Record<string, unknown> | null;
 	select_options?: SelectOptionPayload[] | null;
 	tool_name?: string | null;

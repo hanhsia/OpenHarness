@@ -23,6 +23,7 @@ from openharness.ui.react_launcher import build_backend_command
 log = logging.getLogger(__name__)
 
 _PROTOCOL_PREFIX = "OHJSON:"
+_PROCESS_TERMINATE_TIMEOUT_SECONDS = 3
 
 
 @dataclass(frozen=True)
@@ -76,8 +77,8 @@ def _make_http_handler(static_dir: Path, config: WebFrontendConfig) -> type[Simp
         def __init__(self, *args: Any, **kwargs: Any) -> None:
             super().__init__(*args, directory=str(static_dir), **kwargs)
 
-        def log_message(self, format: str, *args: Any) -> None:  # noqa: A002
-            log.debug("web frontend: " + format, *args)
+        def log_message(self, format_str: str, *args: Any) -> None:
+            log.debug("web frontend: " + format_str, *args)
 
         def do_GET(self) -> None:  # noqa: N802
             if self.path.split("?", 1)[0] == "/config.js":
@@ -189,7 +190,7 @@ async def _terminate_process(process: asyncio.subprocess.Process) -> None:
         return
     process.terminate()
     try:
-        await asyncio.wait_for(process.wait(), timeout=3)
+        await asyncio.wait_for(process.wait(), timeout=_PROCESS_TERMINATE_TIMEOUT_SECONDS)
     except asyncio.TimeoutError:
         process.kill()
         await process.wait()
