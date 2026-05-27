@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" data-theme="paper">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OpenHarness Web</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div id="app" class="shell">
+    <aside class="sidebar ui" aria-label="Session navigation">
+      <div class="brand"><span class="brand-o">O</span>pen<span>·</span>Harness</div>
+      <button class="new-chat" id="clearButton" type="button">New field log</button>
+      <div class="side-section">
+        <div class="side-label">Runtime</div>
+        <dl class="status-list" id="statusList"></dl>
+      </div>
+      <div class="side-section">
+        <div class="side-label">Commands & skills</div>
+        <div class="command-list" id="commandList"></div>
+      </div>
+      <div class="side-footer">所有输入都会发送给 OpenHarness 后端；slash commands 与 skills 由同一套 runtime 处理。</div>
+    </aside>
+
+    <main class="main-panel">
+      <header class="masthead">
+        <div class="row">
+          <div class="wordmark">
+            <span class="name"><span class="o">O</span>pen<span class="amp">·</span>Harness</span>
+            <span class="vol">Web chat · live backend</span>
+          </div>
+          <div class="controls ui">
+            <span class="connection" id="connectionState">connecting</span>
+            <button class="theme" id="themeButton" title="Toggle ink theme" aria-label="Toggle theme"></button>
+          </div>
+        </div>
+        <div class="underline">
+          <div><span id="sessionTitle">Ask, command, skill, execute</span><span class="sep">—</span><span id="cwdLabel">cwd</span></div>
+          <div><span id="modelLabel">model</span><span class="sep">—</span><span id="permissionLabel">permissions</span></div>
+        </div>
+      </header>
+
+      <section class="log" id="log" aria-live="polite">
+        <section class="preamble">
+          <div class="pre-mark">Entry begins</div>
+          <h1>Chat with the harness from the web.<span class="cn" lang="zh-CN">在浏览器里直接使用 OpenHarness。</span></h1>
+          <p>Ask questions, run slash commands, invoke skills, and approve tool access without leaving this page. The browser is only the surface; OpenHarness remains the backend that handles every input.</p>
+          <div class="where"><span class="at">@</span><span id="whereCwd">loading runtime…</span></div>
+        </section>
+      </section>
+
+      <div class="composer-wrap">
+        <form class="composer" id="composer">
+          <div class="sigil">❯</div>
+          <textarea id="prompt" rows="1" placeholder="Ask OpenHarness，或者输入 /skills、/permissions、/model 等命令"></textarea>
+          <div class="meta ui"><kbd>↵</kbd> send <span class="dot">·</span> <kbd>⇧↵</kbd> newline <button class="send" type="submit">send →</button></div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-label" id="modalKind">Permission required</div>
+      <h2 id="modalTitle">OpenHarness needs input</h2>
+      <pre id="modalBody"></pre>
+      <textarea id="modalAnswer" rows="3" placeholder="Type your answer…"></textarea>
+      <div class="modal-actions" id="modalActions"></div>
+    </div>
+  </div>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>

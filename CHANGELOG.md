@@ -8,6 +8,7 @@ The format is based on Keep a Changelog, and this project currently tracks chang
 
 ### Added
 
+- `oh web` launches a local browser chat frontend backed by the existing OpenHarness runtime, with streaming responses, slash-command/skill support, tool output, and permission modals.
 - `edit_file` and `write_file` in the React TUI now preview a unified diff before applying file changes, let users approve once or for the rest of the session, and skip the extra prompt automatically in `full_auto` mode.
 
 ### Fixed

@@ -1805,6 +1805,100 @@ def setup_cmd(
     )
 
 
+@app.command("web")
+def web_cmd(
+    host: str = typer.Option(
+        "127.0.0.1",
+        "--host",
+        help="Host interface for the local web frontend",
+    ),
+    port: int = typer.Option(
+        8765,
+        "--port",
+        help="HTTP port for the local web frontend",
+    ),
+    ws_port: int | None = typer.Option(
+        None,
+        "--ws-port",
+        help="WebSocket bridge port (defaults to --port + 1)",
+    ),
+    cwd: str = typer.Option(
+        str(Path.cwd()),
+        "--cwd",
+        help="Working directory for the OpenHarness backend session",
+    ),
+    model: str | None = typer.Option(
+        None,
+        "--model",
+        "-m",
+        help="Model alias or full model ID",
+    ),
+    effort: str | None = typer.Option(
+        None,
+        "--effort",
+        help="Effort level for the session",
+    ),
+    max_turns: int | None = typer.Option(
+        None,
+        "--max-turns",
+        help="Maximum number of agentic turns",
+    ),
+    base_url: str | None = typer.Option(
+        None,
+        "--base-url",
+        help="Anthropic-compatible API base URL",
+    ),
+    system_prompt: str | None = typer.Option(
+        None,
+        "--system-prompt",
+        "-s",
+        help="Override the default system prompt",
+    ),
+    api_key: str | None = typer.Option(
+        None,
+        "--api-key",
+        "-k",
+        help="API key (overrides config and environment)",
+    ),
+    api_format: str | None = typer.Option(
+        None,
+        "--api-format",
+        help="API format: anthropic, openai, openai_compat, or copilot",
+    ),
+    permission_mode: str | None = typer.Option(
+        None,
+        "--permission-mode",
+        help="Permission mode: default, plan, or full_auto",
+    ),
+    no_open: bool = typer.Option(
+        False,
+        "--no-open",
+        help="Do not open the browser automatically",
+    ),
+) -> None:
+    """Launch the local browser frontend backed by OpenHarness."""
+    import asyncio
+
+    from openharness.ui.web_server import WebFrontendConfig, run_web_frontend
+
+    config = WebFrontendConfig(
+        host=host,
+        port=port,
+        ws_port=ws_port,
+        cwd=cwd,
+        model=model,
+        max_turns=max_turns,
+        effort=effort,
+        base_url=base_url,
+        system_prompt=system_prompt,
+        api_key=api_key,
+        api_format=api_format,
+        permission_mode=permission_mode,
+        open_browser=not no_open,
+    )
+    raise typer.Exit(asyncio.run(run_web_frontend(config)))
+
+
 @auth_app.command("login")
 def auth_login(
     provider: Optional[str] = typer.Argument(None, help="Provider name (anthropic, openai, copilot, …)"),
