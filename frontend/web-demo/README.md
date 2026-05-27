@@ -4,12 +4,6 @@ A single static page that mocks a candidate UI for OpenHarness. It contains
 **no functionality** — just a visual reference so we can iterate on the
 look and feel before building the real frontend.
 
-> **TODO — stale previews.** The `preview-light.png` / `preview-dark.png`
-> screenshots in this folder were captured against the previous neutral-grey
-> mock and **no longer match the page**. Regenerate both (new file names:
-> `preview-paper.png`, `preview-ink.png`) once this direction is approved,
-> and update this README to reference them.
-
 ## Run
 
 Just open the file in a browser:
