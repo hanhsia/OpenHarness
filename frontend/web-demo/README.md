@@ -8,7 +8,7 @@ look and feel before building the real frontend.
 > screenshots in this folder were captured against the previous neutral-grey
 > mock and **no longer match the page**. Regenerate both (new file names:
 > `preview-paper.png`, `preview-ink.png`) once this direction is approved,
-> and update the table below to reference them.
+> and update this README to reference them.
 
 ## Run
 
