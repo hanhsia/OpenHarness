@@ -23,7 +23,7 @@ from openharness.ui.react_launcher import build_backend_command
 log = logging.getLogger(__name__)
 
 _PROTOCOL_PREFIX = "OHJSON:"
-_PROCESS_TERMINATE_TIMEOUT_SECONDS = 3
+_PROCESS_TERMINATE_TIMEOUT_SEC = 3
 
 
 @dataclass(frozen=True)
@@ -190,7 +190,7 @@ async def _terminate_process(process: asyncio.subprocess.Process) -> None:
         return
     process.terminate()
     try:
-        await asyncio.wait_for(process.wait(), timeout=_PROCESS_TERMINATE_TIMEOUT_SECONDS)
+        await asyncio.wait_for(process.wait(), timeout=_PROCESS_TERMINATE_TIMEOUT_SEC)
     except asyncio.TimeoutError:
         process.kill()
         await process.wait()

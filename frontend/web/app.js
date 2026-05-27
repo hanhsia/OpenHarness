@@ -21,6 +21,7 @@ let firstUser = true;
 let busy = false;
 let pendingSelect = null;
 let selectorCommands = new Set();
+const MAX_SIDEBAR_COMMANDS = 28;
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"]/g, (ch) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[ch]));
@@ -134,7 +135,7 @@ function setCommands(commands = [], selectors = []) {
   selectorCommands = new Set(selectors.map((command) => command.replace(/^\//, '')));
   commandList.innerHTML = '';
   // Keep the sidebar compact; the full command registry is still available by typing "/" in the composer.
-  commands.slice(0, 28).forEach((command) => {
+  commands.slice(0, MAX_SIDEBAR_COMMANDS).forEach((command) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'command-chip';

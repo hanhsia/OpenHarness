@@ -20,7 +20,7 @@
         <div class="side-label">Commands & skills</div>
         <div class="command-list" id="commandList"></div>
       </div>
-      <div class="side-footer">所有输入都会发送给 OpenHarness 后端；slash commands 与 skills 由同一套 runtime 处理。</div>
+      <div class="side-footer" lang="zh-CN">所有输入都会发送给 OpenHarness 后端；slash commands 与 skills 由同一套 runtime 处理。</div>
     </aside>
 
     <main class="main-panel">
@@ -53,7 +53,7 @@
       <div class="composer-wrap">
         <form class="composer" id="composer">
           <div class="sigil">❯</div>
-          <textarea id="prompt" rows="1" placeholder="Ask OpenHarness，或者输入 /skills、/permissions、/model 等命令"></textarea>
+          <textarea id="prompt" rows="1" aria-label="Message input" placeholder="Ask OpenHarness，或者输入 /skills、/permissions、/model 等命令"></textarea>
           <div class="meta ui"><kbd>↵</kbd> send <span class="dot">·</span> <kbd>⇧↵</kbd> newline <button class="send" type="submit">send →</button></div>
         </form>
       </div>
