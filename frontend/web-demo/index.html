@@ -22,34 +22,34 @@
 
   :root,
   [data-theme="paper"] {
-    --paper:        #f5f3ee;          /* soft neutral paper */
-    --paper-edge:   #ece8e1;          /* slightly darker edge tone */
-    --paper-sunk:   #e2ddd5;          /* sunken / hover */
-    --rule:         #cac1b5;          /* hairline on paper */
-    --rule-soft:    rgba(33, 35, 42, 0.10);
-    --ink:          #21232a;          /* body — charcoal with a slate cast */
-    --ink-soft:     #5c6270;          /* secondary text */
-    --ink-faint:    #868c99;          /* tertiary, marginalia */
-    --accent:       #355c7d;          /* muted mineral blue */
-    --accent-soft:  #6282a0;
-    --accent-wash:  rgba(53, 92, 125, 0.10);
-    --gold:         #a27a3d;          /* warning / annotation, used once or twice */
-    --add:          #2f6a4d;          /* diff additions */
-    --del:          #8a4b44;          /* diff removals */
-    --code-paper:   #efebe4;
+    --paper:        #f8fafd;          /* colder, brighter paper */
+    --paper-edge:   #eef2f7;          /* slightly darker edge tone */
+    --paper-sunk:   #e5ebf3;          /* sunken / hover */
+    --rule:         #c8d3e2;          /* hairline on paper */
+    --rule-soft:    rgba(35, 47, 64, 0.10);
+    --ink:          #1d2733;          /* body — deep slate-blue ink */
+    --ink-soft:     #596778;          /* secondary text */
+    --ink-faint:    #7f8b9b;          /* tertiary, marginalia */
+    --accent:       #3c6f99;          /* colder mineral blue */
+    --accent-soft:  #6f93b5;
+    --accent-wash:  rgba(60, 111, 153, 0.10);
+    --gold:         #9b7f50;          /* warning / annotation, used once or twice */
+    --add:          #2d6a54;          /* diff additions */
+    --del:          #8b4e56;          /* diff removals */
+    --code-paper:   #eef3f9;
     /* Font stacks — Latin first, then CJK fallbacks so 中文 / 日本語 / 한글
        render in the matching weight instead of dropping to a generic sans. */
-    --font-serif: "Iowan Old Style", "Charter", "Source Serif Pro", "Source Serif 4",
-                  Georgia, "Times New Roman",
+    --font-serif: "Baskerville", "Iowan Old Style", "Palatino Linotype", "Book Antiqua",
+                  "Charter", "Source Serif 4", "Source Serif Pro", Georgia, "Times New Roman",
                   "Songti SC", "STSong", "Source Han Serif SC", "Noto Serif CJK SC",
                   "Noto Serif SC", serif;
-    --font-sans:  "Segoe UI", -apple-system, BlinkMacSystemFont, "Inter", system-ui,
-                  ui-sans-serif,
+    --font-sans:  "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, "Inter",
+                  system-ui, ui-sans-serif,
                   "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
                   "Source Han Sans SC", "Noto Sans CJK SC", "Noto Sans SC",
                   sans-serif;
-    --font-mono:  "JetBrains Mono", "iA Writer Mono", "Cascadia Code",
-                  ui-monospace, "SF Mono", Menlo, Consolas,
+    --font-mono:  "JetBrains Mono", "iA Writer Mono", "Cascadia Mono",
+                  "Cascadia Code", ui-monospace, "SF Mono", Menlo, Consolas,
                   "Sarasa Mono SC", "Noto Sans Mono CJK SC", monospace;
   }
 
@@ -207,6 +207,14 @@
     font-size: 28px; line-height: 36px;
     margin: 0 0 12px;
     font-weight: 500; letter-spacing: -0.005em;
+  }
+  .preamble h1 .cn {
+    display: block;
+    margin-top: 10px;
+    color: var(--accent);
+    font-size: 24px;
+    line-height: 32px;
+    font-style: normal;
   }
   .preamble h1 em { color: var(--ink-soft); font-style: italic; }
   .preamble p {
@@ -556,8 +564,8 @@
     <!-- Preamble: editorial opener, not an empty-state with chips -->
     <section class="preamble">
       <div class="pre-mark">Entry begins</div>
-      <h1>A working transcript between <em>you</em> and the harness.</h1>
-      <p>Every command, file read, and edit is recorded below in the order it happened. Numbers in the margin mark the turn. Tool calls appear inset, with their answers. Nothing is hidden.</p>
+    <h1>A working transcript between <em>you</em> and the harness.<span class="cn" lang="zh-CN">也让中文自然落在纸面上。</span></h1>
+    <p>Every command, file read, and edit is recorded below in the order it happened. Numbers in the margin mark the turn. Tool calls appear inset, with their answers. Nothing is hidden. 中文内容也应该在同一套版式里显得自然、安静、清楚。</p>
       <div class="where"><span class="at">@</span>~/work/OpenHarness · 4 skills loaded · 217 files indexed</div>
     </section>
 
@@ -566,7 +574,7 @@
       <div class="sigil"><span class="num">§ 01</span>14:02</div>
       <p class="byline"><span class="who">You</span></p>
       <div class="prose">
-        <p>Trace how a slash command flows through the query engine, and show me where permission checks happen. Then propose a small refactor to centralize the dispatch.</p>
+        <p lang="zh-CN">把 slash command 从入口到 query engine 的路径理清楚，顺便标出 permission checks 在哪里。然后给我一个小一点的 refactor，顺手把界面调得更白一点、更冷一点，也换个更漂亮的字体。</p>
       </div>
     </article>
 
@@ -579,7 +587,7 @@
         <span class="quiet">sonnet 4.5 · 6.2s</span>
       </p>
       <div class="prose">
-        <p>I’ll start by locating the entry point for slash commands, then follow the call into the query engine.</p>
+        <p lang="zh-CN">我先从 slash command 的入口开始追，再往下看 query engine 的 dispatch。顺便把版面调成更冷的纸白色，让中文和英文都能稳稳地落在同一页上。</p>
 
         <!-- Tool call: marginalia, not a card -->
         <div class="ml">
@@ -594,7 +602,7 @@
           <div><span class="arrow">▸</span><span class="tool">view</span> <span class="args">path="src/openharness/engine/dispatch.py" · lines 110–160</span><span class="annot ok">read 50 lines</span></div>
         </div>
 
-        <p>Slash commands enter at <code>cli/commands.py</code>, are parsed into a <code>Command</code> object, then dispatched by <code>QueryEngine.dispatch</code>. Permission checks happen <em>after</em> tool resolution but <em>before</em> execution, inside <code>_authorize_tool</code>.</p>
+        <p>Slash commands enter at <code>cli/commands.py</code>, are parsed into a <code>Command</code> object, then dispatched by <code>QueryEngine.dispatch</code>. Permission checks happen <em>after</em> tool resolution but <em>before</em> execution, inside <code>_authorize_tool</code>. 中文说明也可以直接夹在段落里，而不是退回到另一套默认字体。</p>
 
         <p>Here is a minimal refactor that pulls the dispatch table out of the engine so it can be unit-tested in isolation:</p>
 
@@ -668,7 +676,7 @@
 
     <div class="composer">
       <div class="sigil">❯</div>
-      <textarea placeholder="Write a reply, or type / for commands.">/e</textarea>
+      <textarea placeholder="Write a reply，或直接输入中文；type / for commands.">/e</textarea>
       <div class="meta ui">
         <kbd>↵</kbd> send <span style="color:var(--rule); margin: 0 6px;">·</span> <kbd>⇧↵</kbd> newline
         <span class="send">send →</span>

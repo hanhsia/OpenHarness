@@ -26,21 +26,25 @@ you and the harness, recorded in order, with nothing hidden.
 
 Choices that make the surface its own thing, not the default:
 
-- **Soft neutral paper, slate ink.** The page now sits on a lighter,
-  less tinted `--paper` with slate-charcoal text so the background stays
-  quieter than the previous warm stone version. The accent remains a
-  restrained **mineral blue**, used sparingly for the wordmark
+- **Cooler white paper, slate ink.** The page now sits on a brighter,
+  colder `--paper` with blue-slate text so the background reads cleaner
+  and less sepia than the previous warm stone version. The accent remains
+  a restrained **mineral blue**, used sparingly for the wordmark
   separator, section numbers, the `❯` composer sigil, and permission
   asks.
-- **Three typefaces, three jobs.** Serif (Iowan Old Style / Charter)
-  carries the prose voice. A clean sans (Segoe UI / system-ui) is
+- **Three typefaces, three jobs.** Serif (Baskerville / Iowan /
+  Palatino / Source Serif) carries the prose voice. A clean sans
+  (Avenir Next / Segoe UI / system-ui) is
   reserved for chrome (header, buttons, hints). Mono (JetBrains Mono
-  / Cascadia Code) is reserved for structural data (paths, tool
+  / Cascadia Mono) is reserved for structural data (paths, tool
   names, diffs). Most AI tools use a single sans for everything; the
   contrast here is part of the identity. **Every stack carries CJK
   fallbacks** (PingFang SC / Microsoft YaHei / Source Han / Noto CJK
   / Sarasa Mono) so 中文 / 日本語 / 한글 render in the matching weight
   instead of dropping to a generic sans.
+- **Chinese is part of the mock, not an afterthought.** The sample log
+  now includes visible Chinese copy in the heading, transcript, and
+  composer so multilingual typesetting is part of the demo surface.
 - **No sidebar.** The chat-list-on-the-left pattern is the strongest
   cliché in this product category, so it is gone. The current session is
   named in the masthead; switching sessions is a dropdown affordance,
