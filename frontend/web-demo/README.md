@@ -55,9 +55,9 @@ Choices that make the surface its own thing, not the default:
 - **Numbered entries in a gutter.** Each conversation turn is a "§ NN"
   entry with the section number hung in a left gutter, like marginalia
   in a printed page. The first user turn even gets a drop-cap.
-- **Ruled paper background.** The body has faint horizontal rules at the
-  baseline grid, the way a notebook page does. It is subtle but it
-  makes the surface feel like a physical artifact, not a SaaS dashboard.
+- **Clean paper surface.** The body now uses a flat paper background
+  (no horizontal stripe texture) so the content column reads cleaner
+  and less busy.
 - **Tool calls as marginalia.** Tool invocations are not cards. They are
   indented mono notes with a thin ink rail on the left and a small
   uppercase annotation (e.g. `· 7 matches`) at the end of the line.
